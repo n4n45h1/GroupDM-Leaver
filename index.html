@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord グループDM 自動退室ツール</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fab fa-discord"></i> Discord グループDM 自動退室ツール</h1>
+            <p>複数のDiscordグループDMを簡単に一括退室できます</p>
+        </header>
+
+        <main>
+            <div id="token-container" class="card">
+                <h2>Discord ユーザートークンを入力</h2>
+                <p>あなたのDiscordユーザートークンを入力して接続してください：</p>
+                <div class="input-group">
+                    <input type="password" id="token-input" placeholder="Discordユーザートークンを貼り付けてください">
+                    <button id="token-submit" class="discord-btn">接続</button>
+                </div>
+                <div class="disclaimer">
+                    <p>⚠️ このツールはブラウザ上でのみ実行されます。あなたのトークンがサーバーに送信されることはありません。</p>
+                    <p>⚠️ 自己責任で使用してください。このツールはDiscordと提携していません。</p>
+                    <p>⚠️ ユーザートークンの使用はDiscordの利用規約に違反する可能性があります。</p>
+                </div>
+            </div>
+
+            <div id="user-info" class="card hidden">
+                <div id="user-profile">
+                    <img id="user-avatar" src="" alt="ユーザーアバター">
+                    <div>
+                        <h2 id="username">未ログイン</h2>
+                        <p id="user-tag"></p>
+                    </div>
+                </div>
+                <button id="logout-button" class="discord-btn danger">ログアウト</button>
+            </div>
+
+            <div id="group-dm-container" class="card hidden">
+                <div class="card-header">
+                    <h2>あなたのグループDM</h2>
+                    <div class="actions">
+                        <button id="refresh-button" class="discord-btn small">
+                            <i class="fas fa-sync-alt"></i> 更新
+                        </button>
+                        <button id="select-all-button" class="discord-btn small">
+                            <i class="fas fa-check-square"></i> すべて選択
+                        </button>
+                        <button id="deselect-all-button" class="discord-btn small">
+                            <i class="fas fa-square"></i> 選択解除
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="group-dm-list">
+                    <div id="loading" class="hidden">
+                        <i class="fas fa-spinner fa-spin"></i> グループDMを読み込み中...
+                    </div>
+                    <div id="no-groups" class="hidden">
+                        <p>グループDMが見つかりませんでした。</p>
+                    </div>
+                    <ul id="dm-list"></ul>
+                </div>
+                
+                <div class="leave-actions">
+                    <button id="leave-selected-button" class="discord-btn danger">
+                        <i class="fas fa-sign-out-alt"></i> 選択したグループDMを退室
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <div id="results-container" class="card hidden">
+            <h2>結果</h2>
+            <ul id="results-list"></ul>
+        </div>
+
+        <footer>
+            <p>作成者: Nanachi</p>
+            <p class="small-text">更新日: <span id="current-date"></span></p>
+            <p class="small-text">ソースコード: <span id="current-code">https://github.com/n4n45h1/GroupDM-Leaver</span></p>
+        </footer>
+    </div>
+
+    <!-- 確認用モーダル -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>操作の確認</h3>
+            <p>選択したグループDMから退室してもよろしいですか？この操作は元に戻せません。</p>
+            <div class="modal-buttons">
+                <button id="confirm-cancel" class="discord-btn">キャンセル</button>
+                <button id="confirm-proceed" class="discord-btn danger">続行</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
