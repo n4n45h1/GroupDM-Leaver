@@ -9,7 +9,7 @@
 *複数のDiscordグループDMを簡単に一括退室できるウェブツール*  
 *A web tool to easily leave multiple Discord group DMs at once*
 
-[日本語](README.md) | [English](README_EN.md)
+
 
 </div>
 
