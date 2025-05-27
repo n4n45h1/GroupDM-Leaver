@@ -10,22 +10,34 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fab fa-discord"></i> Discord グループDM 自動退室ツール</h1>
-            <p>複数のDiscordグループDMを簡単に一括退室できます</p>
+            <h1><i class="fab fa-discord"></i> <span data-lang="title">Discord グループDM 自動退室ツール</span></h1>
+            <p data-lang="subtitle">複数のDiscordグループDMを簡単に一括退室できます</p>
+            
+            <div class="settings-bar">
+                <div class="language-selector">
+                    <button id="lang-ja" class="lang-btn active">日本語</button>
+                    <button id="lang-en" class="lang-btn">English</button>
+                </div>
+                
+                <div class="theme-selector">
+                    <button id="theme-dark" class="theme-btn active"><i class="fas fa-moon"></i></button>
+                    <button id="theme-light" class="theme-btn"><i class="fas fa-sun"></i></button>
+                </div>
+            </div>
         </header>
 
         <main>
             <div id="token-container" class="card">
-                <h2>Discord ユーザートークンを入力</h2>
-                <p>あなたのDiscordユーザートークンを入力して接続してください：</p>
+                <h2 data-lang="token-title">Discord ユーザートークンを入力</h2>
+                <p data-lang="token-desc">あなたのDiscordユーザートークンを入力して接続してください：</p>
                 <div class="input-group">
-                    <input type="password" id="token-input" placeholder="Discordユーザートークンを貼り付けてください">
-                    <button id="token-submit" class="discord-btn">接続</button>
+                    <input type="password" id="token-input" data-lang-placeholder="token-placeholder" placeholder="Discordユーザートークンを貼り付けてください">
+                    <button id="token-submit" class="discord-btn" data-lang="connect">接続</button>
                 </div>
                 <div class="disclaimer">
-                    <p>⚠️ このツールはブラウザ上でのみ実行されます。あなたのトークンがサーバーに送信されることはありません。</p>
-                    <p>⚠️ 自己責任で使用してください。このツールはDiscordと提携していません。</p>
-                    <p>⚠️ ユーザートークンの使用はDiscordの利用規約に違反する可能性があります。</p>
+                    <p data-lang="disclaimer-1">⚠️ このツールはブラウザ上でのみ実行されます。あなたのトークンがサーバーに送信されることはありません。</p>
+                    <p data-lang="disclaimer-2">⚠️ 自己責任で使用してください。このツールはDiscordと提携していません。</p>
+                    <p data-lang="disclaimer-3">⚠️ ユーザートークンの使用はDiscordの利用規約に違反する可能性があります。</p>
                 </div>
             </div>
 
@@ -37,63 +49,99 @@
                         <p id="user-tag"></p>
                     </div>
                 </div>
-                <button id="logout-button" class="discord-btn danger">ログアウト</button>
+                <button id="logout-button" class="discord-btn danger" data-lang="logout">ログアウト</button>
             </div>
 
             <div id="group-dm-container" class="card hidden">
                 <div class="card-header">
-                    <h2>あなたのグループDM</h2>
+                    <h2 data-lang="your-group-dms">あなたのグループDM</h2>
                     <div class="actions">
                         <button id="refresh-button" class="discord-btn small">
-                            <i class="fas fa-sync-alt"></i> 更新
+                            <i class="fas fa-sync-alt"></i> <span data-lang="refresh">更新</span>
                         </button>
                         <button id="select-all-button" class="discord-btn small">
-                            <i class="fas fa-check-square"></i> すべて選択
+                            <i class="fas fa-check-square"></i> <span data-lang="select-all">すべて選択</span>
                         </button>
                         <button id="deselect-all-button" class="discord-btn small">
-                            <i class="fas fa-square"></i> 選択解除
+                            <i class="fas fa-square"></i> <span data-lang="deselect-all">選択解除</span>
                         </button>
+                    </div>
+                </div>
+                
+                <!-- User filter section -->
+                <div class="filter-section">
+                    <div class="filter-header">
+                        <h3 data-lang="filter-title">特定ユーザーによるフィルタリング</h3>
+                        <button id="toggle-filter" class="discord-btn small">
+                            <i class="fas fa-filter"></i> <span data-lang="toggle-filter">フィルターを表示</span>
+                        </button>
+                    </div>
+                    <div id="filter-container" class="hidden">
+                        <div class="input-group">
+                            <input type="text" id="user-filter" data-lang-placeholder="user-filter-placeholder" placeholder="ユーザー名またはIDを入力">
+                            <button id="apply-filter" class="discord-btn small" data-lang="apply-filter">適用</button>
+                        </div>
+                        <div class="filter-badges" id="filter-badges">
+                            <!-- Filter badges will appear here -->
+                        </div>
                     </div>
                 </div>
                 
                 <div id="group-dm-list">
                     <div id="loading" class="hidden">
-                        <i class="fas fa-spinner fa-spin"></i> グループDMを読み込み中...
+                        <i class="fas fa-spinner fa-spin"></i> <span data-lang="loading-dms">グループDMを読み込み中...</span>
                     </div>
                     <div id="no-groups" class="hidden">
-                        <p>グループDMが見つかりませんでした。</p>
+                        <p data-lang="no-groups">グループDMが見つかりませんでした。</p>
                     </div>
                     <ul id="dm-list"></ul>
                 </div>
                 
+                <!-- Leave message section -->
+                <div class="leave-message-section">
+                    <div class="leave-message-header">
+                        <h3 data-lang="leave-message-title">退室時のメッセージ</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="send-message-toggle">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label" data-lang="send-message-toggle">メッセージを送信</span>
+                        </label>
+                    </div>
+                    <div id="message-container" class="hidden">
+                        <textarea id="leave-message" rows="3" data-lang-placeholder="leave-message-placeholder" placeholder="退室時に送信するメッセージを入力してください"></textarea>
+                    </div>
+                </div>
+                
                 <div class="leave-actions">
                     <button id="leave-selected-button" class="discord-btn danger">
-                        <i class="fas fa-sign-out-alt"></i> 選択したグループDMを退室
+                        <i class="fas fa-sign-out-alt"></i> <span data-lang="leave-selected">選択したグループDMを退室</span>
                     </button>
                 </div>
             </div>
         </main>
 
         <div id="results-container" class="card hidden">
-            <h2>結果</h2>
+            <h2 data-lang="results">結果</h2>
             <ul id="results-list"></ul>
         </div>
 
         <footer>
-            <p>作成者: Nanachi</p>
-            <p class="small-text">更新日: <span id="current-date"></span></p>
-            <p class="small-text">ソースコード: <span id="current-code">https://github.com/n4n45h1/GroupDM-Leaver</span></p>
+            <p data-lang="created-by">作成者: Nanachi</p>
+            <p class="small-text"><span data-lang="updated-date">更新日:</span> <span id="current-date">2025-05-27</span></p>
+            <p class="small-text"><span data-lang="source-code">ソースコード:</span> <a id="current-code" href="https://github.com/n4n45h1/GroupDM-Leaver" target="_blank">https://github.com/n4n45h1/GroupDM-Leaver</a></p>
+          <p class="small-text bug-report"><span data-lang="bug-report">バグ報告:</span> <a href="https://discord.com/users/xgwn" target="_blank">@xgwn</a></p>
+</footer>
         </footer>
     </div>
 
     <!-- 確認用モーダル -->
     <div id="confirm-modal" class="modal hidden">
         <div class="modal-content">
-            <h3>操作の確認</h3>
-            <p>選択したグループDMから退室してもよろしいですか？この操作は元に戻せません。</p>
+            <h3 data-lang="confirm-title">操作の確認</h3>
+            <p data-lang="confirm-message">選択したグループDMから退室してもよろしいですか？この操作は元に戻せません。</p>
             <div class="modal-buttons">
-                <button id="confirm-cancel" class="discord-btn">キャンセル</button>
-                <button id="confirm-proceed" class="discord-btn danger">続行</button>
+                <button id="confirm-cancel" class="discord-btn" data-lang="cancel">キャンセル</button>
+                <button id="confirm-proceed" class="discord-btn danger" data-lang="proceed">続行</button>
             </div>
         </div>
     </div>
