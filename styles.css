@@ -535,16 +535,20 @@ footer {
   animation: fadeIn 0.3s ease;
 }
 
-textarea {
+textarea,
+#rename-container input[type="text"] {
   width: 100%;
   padding: 10px;
   background-color: var(--input-bg);
   color: var(--text-normal);
   border: none;
   border-radius: 4px;
-  resize: vertical;
   font-size: 14px;
   transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+textarea {
+  resize: vertical;
 }
 
 /* トグルスイッチ */
