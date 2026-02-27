@@ -41,6 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const sendMessageToggle = document.getElementById('send-message-toggle');
   const messageContainer = document.getElementById('message-container');
   const leaveMessageInput = document.getElementById('leave-message');
+  const renameGroupToggle = document.getElementById('rename-group-toggle');
+  const renameContainer = document.getElementById('rename-container');
+  const renameGroupInput = document.getElementById('rename-group-input');
   
   // 更新日を表示 - 正しい日付に修正
   currentDateElement.textContent = "2025-05-27";
@@ -97,7 +100,12 @@ document.addEventListener('DOMContentLoaded', function() {
       'filter-removed': 'フィルターを削除: ユーザー ',
       'no-matching-dms': 'フィルター条件に一致するグループDMはありません',
       'bug-report': 'バグ報告:',
-      'members': '人のメンバー: '
+      'members': '人のメンバー: ',
+      'rename-group-title': '退室前にグループ名を変更',
+      'rename-group-toggle': 'グループ名を変更',
+      'rename-group-placeholder': '新しいグループ名を入力してください',
+      'rename-success': 'グループ名を変更しました: ',
+      'rename-error': 'グループ名の変更に失敗しました: '
     },
     'en': {
       'title': 'Discord Group DM Auto-Leaver Tool',
@@ -142,7 +150,12 @@ document.addEventListener('DOMContentLoaded', function() {
       'filter-removed': 'Filter removed: User ',
       'no-matching-dms': 'No group DMs match your filter criteria',
       'bug-report': 'Bug report:',
-      'members': 'members: '
+      'members': 'members: ',
+      'rename-group-title': 'Rename Group Before Leaving',
+      'rename-group-toggle': 'Rename Group',
+      'rename-group-placeholder': 'Enter new group name',
+      'rename-success': 'Group renamed to: ',
+      'rename-error': 'Failed to rename group: '
     }
   };
   
@@ -217,6 +230,15 @@ document.addEventListener('DOMContentLoaded', function() {
       messageContainer.classList.remove('hidden');
     } else {
       messageContainer.classList.add('hidden');
+    }
+  }
+  
+  // グループ名変更入力欄表示切替
+  function toggleRenameInput() {
+    if (renameGroupToggle.checked) {
+      renameContainer.classList.remove('hidden');
+    } else {
+      renameContainer.classList.add('hidden');
     }
   }
   
@@ -296,6 +318,31 @@ document.addEventListener('DOMContentLoaded', function() {
       return { success: true, message: message };
     } catch (error) {
       console.error(`チャネル ${channelId} へのメッセージ送信エラー:`, error);
+      return { success: false, error: error.message };
+    }
+  }
+  
+  // グループDM名前変更関数
+  async function renameGroupDM(channelId, newName) {
+    if (!newName.trim()) return { success: true, skipped: true };
+    
+    try {
+      const response = await fetch(`${API_ENDPOINT}/channels/${channelId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': userToken,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: newName.trim() })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`グループ名変更エラー: ${response.status}`);
+      }
+      
+      return { success: true, name: newName.trim() };
+    } catch (error) {
+      console.error(`チャネル ${channelId} の名前変更エラー:`, error);
       return { success: false, error: error.message };
     }
   }
@@ -492,9 +539,15 @@ document.addEventListener('DOMContentLoaded', function() {
   // グループDMから退室
   async function leaveGroupDM(channelId) {
       try {
+          // グループ名変更が有効な場合
+          let renamed = null;
+          if (renameGroupToggle.checked && renameGroupInput.value.trim()) {
+              renamed = await renameGroupDM(channelId, renameGroupInput.value);
+          }
+          
           // メッセージ送信が有効な場合
           if (sendMessageToggle.checked && leaveMessageInput.value.trim()) {
-              const messageResult = await sendMessage(channelId, leaveMessageInput.value);
+              await sendMessage(channelId, leaveMessageInput.value);
               // エラーがあってもそのまま退室処理を続行
           }
           
@@ -512,7 +565,8 @@ document.addEventListener('DOMContentLoaded', function() {
           return {
               success: true,
               channelId: channelId,
-              messageSent: sendMessageToggle.checked && leaveMessageInput.value.trim()
+              messageSent: sendMessageToggle.checked && leaveMessageInput.value.trim(),
+              renamed: renamed
           };
       } catch (error) {
           console.error(`グループDM ${channelId} からの退室エラー:`, error);
@@ -531,12 +585,14 @@ document.addEventListener('DOMContentLoaded', function() {
       resultsContainer.classList.remove('hidden');
       resultsList.innerHTML = '';
       
-      // SetをArrayに変換して反復処理
+      // SetをArrayに変換して並列処理
       const dmsToLeave = Array.from(selectedDMs);
       
-      // 各DMを処理
-      for (const dmId of dmsToLeave) {
-          const result = await leaveGroupDM(dmId);
+      // 全DMを並列で処理
+      const results = await Promise.all(dmsToLeave.map(dmId => leaveGroupDM(dmId)));
+      
+      results.forEach((result, index) => {
+          const dmId = dmsToLeave[index];
           
           // 表示用のDM情報を検索
           const dm = groupDMs.find(d => d.id === dmId);
@@ -548,6 +604,9 @@ document.addEventListener('DOMContentLoaded', function() {
           
           if (result.success) {
               let resultText = `"${dmName}" ${langDict[currentLanguage]['success-leave']}`;
+              if (result.renamed && result.renamed.success && result.renamed.name) {
+                  resultText += `<br>${langDict[currentLanguage]['rename-success']}"${result.renamed.name}"`;
+              }
               if (result.messageSent) {
                   resultText += `<br>${langDict[currentLanguage]['message-sent']}"${leaveMessageInput.value.substring(0, 30)}${leaveMessageInput.value.length > 30 ? '...' : ''}"`;
               }
@@ -565,7 +624,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           
           resultsList.appendChild(resultItem);
-      }
+      });
       
       updateLeaveButtonStatus();
   }
@@ -656,6 +715,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   sendMessageToggle.addEventListener('change', toggleMessageInput);
+  renameGroupToggle.addEventListener('change', toggleRenameInput);
   
   // Enterキーでトークン入力を送信
   tokenInput.addEventListener('keypress', function(e) {
