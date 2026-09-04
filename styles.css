@@ -166,6 +166,13 @@ header p {
   transform: translateY(1px);
 }
 
+.discord-btn:disabled,
+.discord-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .discord-btn.small {
   font-size: 14px;
   padding: 6px 12px;
@@ -179,16 +186,19 @@ header p {
   background-color: #c03537;
 }
 
-.discord-btn.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .disclaimer {
   margin-top: 20px;
   font-size: 0.9em;
   color: var(--text-muted);
   transition: color var(--transition-speed);
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+  color: var(--text-normal);
 }
 
 .input-group {
@@ -335,6 +345,32 @@ header p {
   gap: 10px;
 }
 
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.status-item {
+  padding: 10px;
+  border-radius: 6px;
+  background-color: var(--bg-tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.status-item span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.status-item strong {
+  color: var(--text-bright);
+  font-size: 18px;
+}
+
 .leave-actions {
   margin-top: 20px;
   text-align: center;
@@ -354,6 +390,9 @@ header p {
   border-radius: 4px;
   margin-bottom: 5px;
   animation: slideIn 0.3s ease;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
 }
 
 @keyframes slideIn {
@@ -369,6 +408,15 @@ header p {
 #results-list li.error {
   background-color: rgba(237, 66, 69, 0.1);
   border-left: 3px solid var(--discord-danger);
+}
+
+#results-list li.summary {
+  background-color: rgba(88, 101, 242, 0.1);
+  border-left: 3px solid var(--discord-primary);
+}
+
+.card-header.compact {
+  margin-bottom: 10px;
 }
 
 footer {
@@ -633,6 +681,10 @@ input:checked + .toggle-slider:before {
   
   .filter-section, .leave-message-section {
       padding: 12px 8px;
+  }
+
+  .status-grid {
+      grid-template-columns: 1fr;
   }
 }
 .bug-report {
