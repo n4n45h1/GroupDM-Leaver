@@ -1,59 +1,54 @@
-<div align="center">
+# Discord Group DM Leaver
 
-# 🔌 Discord Group DM Leaver
+Discord のグループDMを一覧表示し、複数まとめて退室できるブラウザツールです。  
+A browser tool to list and leave multiple Discord Group DMs in bulk.
 
-[![Language: JavaScript](https://img.shields.io/badge/Language-JavaScript-yellow.svg)](https://github.com/n4n45h1/GroupDM-Leaver)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Discord](https://img.shields.io/badge/Discord-@xgwn-5865F2?logo=discord&logoColor=white)](https://discord.com/users/xgwn)
+> [!WARNING]
+> ユーザートークン利用は Discord の利用規約に抵触する可能性があります。自己責任で利用してください。
 
-*複数のDiscordグループDMを簡単に一括退室できるウェブツール*  
-*A web tool to easily leave multiple Discord group DMs at once*
+## 主な機能
 
+- グループDMの一覧取得
+- 複数DMの一括選択 / 一括退室
+- 退室前メッセージ送信（任意）
+- ユーザー名・ユーザーID・グループ名フィルター
+- 日本語 / 英語切替
+- ダーク / ライトテーマ切替
+- 退室結果ログと成功/失敗サマリー
 
+## 使い方
 
-</div>
+1. https://n4n45h1.github.io/GroupDM-Leaver/ を開く
+2. Discordユーザートークンを入力して接続
+3. 退室対象のグループDMを選択
+4. 必要なら以下を設定
+   - 退室前メッセージ
+   - フィルター条件
+5. 「選択したグループDMを退室」を実行
 
-## 機能
+## セキュリティと注意事項
 
-- 🔍 **グループDMを一括表示** - すべてのグループDMを一覧で確認
-- 🚪 **一括退室** - 複数のグループDMから一度に退室
-- 💬 **退室メッセージ** - 退室前にメッセージを送信
-- 👤 **ユーザーフィルター** - 特定のユーザーが参加しているグループDMを検索
-- 🌙 **ダーク/ライトモード** - お好みのテーマで使用可能
-- 🌐 **日本語/英語対応** - 言語切替機能
+- このツールはクライアントサイドのみで動作します（専用バックエンドなし）
+- 入力したトークンはブラウザのローカルストレージに保存されます
+- 公共PCや共有環境では利用後に必ずログアウトしてください
+- Discord API の仕様変更により動作が変わる可能性があります
 
-## 🚀 使い方
+## ファイル構成
 
-1. **アクセス**: [Discord Group DM Leaver](https://n4n45h1.github.io/GroupDM-Leaver/) にアクセス
-2. **認証**: Discordユーザートークンを入力して接続
-3. **選択**: 退室したいグループDMを選択
-4. **オプション設定**: 
-   - 退室時のメッセージを設定（任意）
-   - 特定のユーザーでフィルター（任意）
-5. **退室**: 「選択したグループDMを退室」ボタンをクリック
+- `/index.html` : UI構造
+- `/styles.css` : テーマとレイアウト
+- `/script.js` : Discord API連携とUIロジック
+- `/token-get.js` : 開発者向けトークン取得補助スニペット
 
-## ⚠️ 注意事項
+## 開発者
 
-- このツールはブラウザ上でのみ実行され、トークンがサーバーに送信されることはありません
-- ユーザートークンの使用はDiscordの利用規約に違反する可能性があります
-- 自己責任でご使用ください
+- Nanachi ([@n4n45h1](https://github.com/n4n45h1))
 
-## 💡 新機能 (2025-05-27 アップデート)
+## バグ報告
 
-- ✅ 英語/日本語の言語切替
-- ✅ ダーク/ライトテーマの切替
-- ✅ 退室時のメッセージ送信機能
+- Discord: [@xgwn](https://discord.com/users/xgwn)
+- GitHub Issues: https://github.com/n4n45h1/GroupDM-Leaver/issues
 
-## 👨‍💻 開発者
+## License
 
-- **Nanachi** - [@n4n45h1](https://github.com/n4n45h1)
-
-## 🐛 バグ報告
-
-バグを見つけた場合は、Discord:@xgwnまでご連絡ください。
-
----
-
-<div align="center">
-  <sub>⭐ このプロジェクトが役に立ったら、スターをつけてください！</sub>
-</div>
+MIT
